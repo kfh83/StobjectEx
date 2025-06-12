@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\AVI">
+      <UniqueIdentifier>{a972f825-3e81-4054-b4db-d86573b10d2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\ICO">
+      <UniqueIdentifier>{3c531868-9bc9-4dfa-a513-47a1f13c73df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shundoc">
+      <UniqueIdentifier>{f6b2f681-8ed2-46f8-8f17-79a75f46e302}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Bringovers">
+      <UniqueIdentifier>{26dc0190-8c2b-4647-9a1d-6326cebe07c7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\cfact.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\csc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\dll.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\hplug.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\power.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\print.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\stobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\systray.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\usbui.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\volume.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\access.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shundoc\shundoc.cpp">
+      <Filter>Source Files\Shundoc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\cfact.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\pccrdapi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stclsid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stobject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\stresid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\systray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shundoc\shundoc.h">
+      <Filter>Source Files\Shundoc</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bringovers\empty.h">
+      <Filter>Source Files\Bringovers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\systray.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AVI\idle_blk.avi">
+      <Filter>Resource Files\AVI</Filter>
+    </None>
+    <None Include="Resources\AVI\to_comp.avi">
+      <Filter>Resource Files\AVI</Filter>
+    </None>
+    <None Include="Resources\AVI\to_fax.avi">
+      <Filter>Resource Files\AVI</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\ICO\battplug.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\csc.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\csc1.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\csc2.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\csc3.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\csc4.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\faxing.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\faxnew.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\fk.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\hotplug.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\mk_bb.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\mk_bg.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\mk_bt.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\mk_gb.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\mk_gg.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\mk_gt.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\mk_pass.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\mk_tb.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\mk_tg.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\mk_tt.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\mute.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\pcmcia.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk0000.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk0001.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk0010.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk0011.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk0100.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk0101.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk0110.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk0111.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk1000.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk1001.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk1010.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk1011.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk1100.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk1101.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk1110.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\stk1111.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\ICO\volume.ico">
+      <Filter>Resource Files\ICO</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
