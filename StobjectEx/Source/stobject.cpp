@@ -13,7 +13,7 @@ extern "C"
 {
 void StartNetShell()
 {
-    ASSERT(!g_pctNetShell);
+    //ASSERT(!g_pctNetShell);
 
     HRESULT hr = CoCreateInstance(CLSID_ConnectionTray, NULL, CLSCTX_INPROC_SERVER,
                             IID_IOleCommandTarget, (void **)&g_pctNetShell);
@@ -69,7 +69,7 @@ ULONG CSysTray::AddRef()
 
 ULONG CSysTray::Release()
 {
-    ASSERT( 0 != m_cRef );
+    //ASSERT( 0 != m_cRef );
     ULONG cRef = InterlockedDecrement(&m_cRef);
     if ( 0 == cRef )
     {
@@ -140,7 +140,7 @@ CSysTray::CSysTray(BOOL fRunTrayOnConstruct)
 
 CSysTray::~CSysTray()
 {
-    ASSERT( 0 != g_cLocks );
+    //ASSERT( 0 != g_cLocks );
     InterlockedDecrement(&g_cLocks);
 }
 

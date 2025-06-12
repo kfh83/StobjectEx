@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "systray.h"
-//#include "winuserp.h"
+#include ".\Bringovers\WinUserP.h"
+
 // These two lines must be commented out before checkin
 //#define DBG 1
 //#include "..\..\..\osshell\accessib\inc\w95trace.c"

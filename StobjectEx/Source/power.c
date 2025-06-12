@@ -31,14 +31,15 @@
 //#include <nturtl.h>
 
 #include <initguid.h>
-#include <ntpoapi.h>
+//#include <ntpoapi.h>
 #include <poclass.h>
 
 #include "systray.h"
 
-#include "batmeter.h"
+//#include "batmeter.h"
 #include "powrprof.h"
-#include "powercfp.h"
+#include "Bringovers/Help.h"
+//#include "powercfp.h"
 
 #define UPDATE_REGISTRY TRUE
 #define NO_REGISTRY_UPDATE FALSE

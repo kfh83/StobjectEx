@@ -13,9 +13,9 @@
 #include <shellapi.h>
 //#include <shlapip.h>
 #include <commctrl.h>
-//#include <winuserp.h>
+#include ".\Bringovers\WinUserP.h"
 #include "pccrdapi.h"     
-//#include <systrayp.h>
+#include ".\Bringovers\systrayp.h"
 //#include <help.h>         
 #include <dbt.h>
 //#include <ntpoapi.h>

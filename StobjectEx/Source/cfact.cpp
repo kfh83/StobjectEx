@@ -36,7 +36,7 @@ ULONG CSysTrayFactory::AddRef()
 
 ULONG CSysTrayFactory::Release()
 {
-    ASSERT( 0 != m_cRef );
+    //ASSERT( 0 != m_cRef );
     ULONG cRef = InterlockedDecrement(&m_cRef);
     if ( 0 == cRef )
     {
@@ -83,7 +83,7 @@ HRESULT CSysTrayFactory::LockServer(BOOL fLock)
     }
     else
     {
-        ASSERT( 0 != g_cLocks );
+        //ASSERT( 0 != g_cLocks );
         InterlockedDecrement(&g_cLocks);
     }
 
@@ -104,6 +104,6 @@ CSysTrayFactory::CSysTrayFactory(BOOL fRunTrayOnConstruct)
 
 CSysTrayFactory::~CSysTrayFactory()
 {
-    ASSERT( 0 != g_cLocks );
+    //ASSERT( 0 != g_cLocks );
     InterlockedDecrement(&g_cLocks);
 }

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "systray.h"
-//#include <cscuiext.h>
+#include ".\Bringovers\cscuiext.h"
 ///////////////////////////////////////////////////////////////////////////////
 // CSC_CheckEnable
 

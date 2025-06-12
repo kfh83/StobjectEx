@@ -141,7 +141,10 @@
     <ClCompile Include="Source\volume.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Bringovers\empty.h" />
+    <ClInclude Include="Source\Bringovers\cscuiext.h" />
+    <ClInclude Include="Source\Bringovers\Help.h" />
+    <ClInclude Include="Source\Bringovers\systrayp.h" />
+    <ClInclude Include="Source\Bringovers\WinUserP.h" />
     <ClInclude Include="Source\cfact.h" />
     <ClInclude Include="Source\pccrdapi.h" />
     <ClInclude Include="Source\Shundoc\shundoc.h" />

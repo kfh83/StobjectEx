@@ -6,6 +6,7 @@
 #include <initguid.h>
 #include <usbioctl.h>
 //#include <wmium.h>
+#include <wmistr.h>
 #include <tchar.h>
 #include <setupapi.h>
 
@@ -93,7 +94,7 @@ USBUIEngageHandler:
 }
 
 VOID USBUI_WaitRoutineCallback(WMIHANDLE Handle, BOOLEAN Unused) {
-    ASSERT(!Unused);
+    //ASSERT(!Unused);
     UnregisterWaitEx(g_hWait, NULL);
     g_hWait = NULL;
     WmiReceiveNotifications(1, &Handle, USBUI_EventCallbackRoutine, (ULONG_PTR)NULL);
@@ -112,8 +113,8 @@ int USBUI_ErrorMessagesEnable(BOOL fEnable)
     static WMIHANDLE hWmi = NULL;
 
     if (fEnable) {
-        ASSERT(!g_hWait);
-        ASSERT(!hWmi);
+        //ASSERT(!g_hWait);
+        //ASSERT(!hWmi);
         status = WmiOpenBlock((LPGUID) &GUID_USB_WMI_STD_DATA,
                               WMIGUID_NOTIFICATION | SYNCHRONIZE,
                               &hWmi);
@@ -128,7 +129,7 @@ int USBUI_ErrorMessagesEnable(BOOL fEnable)
             status = result ? 0 : ERROR_INVALID_FUNCTION;
         }
     } else {
-        ASSERT(hWmi);
+        //ASSERT(hWmi);
         if (g_hWait) {
             result = UnregisterWait(g_hWait);
         }

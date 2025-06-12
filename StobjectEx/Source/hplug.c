@@ -712,7 +712,7 @@ IsDevInstInDeviceInfoSet(
         if (DevInst == DeviceInfoData.DevInst) {
             bIsMember = TRUE;
             if (ARGUMENT_PRESENT(DeviceInfoDataInSet)) {
-                ASSERT(DeviceInfoDataInSet->cbSize >= DeviceInfoData.cbSize);
+                //ASSERT(DeviceInfoDataInSet->cbSize >= DeviceInfoData.cbSize);
                 memcpy(DeviceInfoDataInSet, &DeviceInfoData, DeviceInfoDataInSet->cbSize);
             }
             break;
