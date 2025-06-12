@@ -39,7 +39,7 @@
 //#include "batmeter.h"
 #include "powrprof.h"
 #include "Bringovers/Help.h"
-//#include "powercfp.h"
+#include "Bringovers/powercfp.h"
 
 #define UPDATE_REGISTRY TRUE
 #define NO_REGISTRY_UPDATE FALSE
