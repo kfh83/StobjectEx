@@ -175,7 +175,7 @@ DWORD CSysTray::SysTrayThreadProc(void* lpv)
 
     HINSTANCE hInstThis = LoadLibrary(szModule);
 
-    int Result = SysTrayMain(g_hinstDll, NULL, TEXT(""), SW_SHOWNORMAL);
+    int Result = SysTrayMain(g_hinstDll, NULL, (LPTSTR)TEXT(""), SW_SHOWNORMAL);
     
     FreeLibraryAndExitThread(hInstThis, (DWORD) Result);
 

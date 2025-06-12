@@ -3,8 +3,9 @@
 #include "stobject.h"
 #include "cfact.h"
 #define DECL_CRTFREE
-#include <crtfree.h>
+//#include <crtfree.h>
 #include "strsafe.h"
+#include "Bringovers/shfusion.h"
 
 // One lock for each running component + one lock per LockServer call
 long g_cLocks = 0;
@@ -65,7 +66,7 @@ BOOL RegisterComponent(const CLSID& clsid, const TCHAR* szProgID)
     // Build a CLSID string for the registry
     BOOL fSuccess = FALSE;
     TCHAR szSubkey[MAX_PATH];
-    TCHAR szCLSID[GUIDSTR_MAX];
+    TCHAR szCLSID[38];
     TCHAR szModule[MAX_PATH];
     HKEY hkeyCLSID = NULL;
     HKEY hkeyInproc = NULL;
@@ -117,7 +118,7 @@ BOOL UnregisterComponent(const CLSID& clsid)
     // Build a CLSID string for the registry
     BOOL fSuccess = FALSE;
     TCHAR szSubkey[MAX_PATH];
-    TCHAR szCLSID[GUIDSTR_MAX];
+    TCHAR szCLSID[38];
     HKEY hkeyCLSID = NULL;
 
     // Try and get all the strings we need
@@ -148,7 +149,7 @@ BOOL RegisterShellServiceObject(const CLSID& clsid, const TCHAR* szProgID, BOOL 
 {
     const static TCHAR szSubkey[] = TEXT("Software\\Microsoft\\Windows\\CurrentVersion\\ShellServiceObjectDelayLoad");
     BOOL fSuccess = FALSE;
-    TCHAR szCLSID[GUIDSTR_MAX];
+    TCHAR szCLSID[38];
     HKEY hkey = NULL;
 
     // Try and get all the strings we need

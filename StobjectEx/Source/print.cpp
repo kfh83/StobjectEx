@@ -21,7 +21,7 @@ Revision History:
 #include "stdafx.h"
 
 extern "C" {
-#include <systray.h>
+#include "systray.h"
 
 typedef BOOL WINAPI fntype_PrintNotifyTrayInit();
 typedef BOOL WINAPI fntype_PrintNotifyTrayExit();

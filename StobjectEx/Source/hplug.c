@@ -937,12 +937,13 @@ UpdateRemovableDeviceList(
                                            DeviceInstanceId,
                                            MAX_DEVICE_ID_LEN,
                                            NULL)) {
-
+                // @MOD - Skipped KdPrintEx
+                /*
                 KdPrintEx((DPFLTR_PNPMGR_ID,
                            (0x00000010 | DPFLTR_MASK),
                            "HPLUG: Adding device %ws to g_hRemovableDeviceInfoSet\n",
                            DeviceInstanceId));
-
+                */
                 SetupDiOpenDeviceInfo(g_hRemovableDeviceInfoSet,
                                       DeviceInstanceId,
                                       NULL,
@@ -968,10 +969,13 @@ UpdateRemovableDeviceList(
 
                         *bRemovableDeviceFailure = TRUE;
 
+                        // @MOD - Skipped KdPrintEx
+                        /*
                         KdPrintEx((DPFLTR_PNPMGR_ID,
                                    (0x00000010 | DPFLTR_MASK),
                                    "HPLUG: Device %ws considered a failed insertion (Status = 0x%08lx, Problem = 0x%08lx)\n",
                                    DeviceInstanceId, ulDevStatus, ulDevProblem));
+                        */
                     }
                 }
             }
@@ -1941,19 +1945,27 @@ Notes:
     //
     // Always play sound events on the physical console.
     //
+
+    // @MOD - Skipped Peb (for now)
+    /*
     if (IsConsoleSession()) {
         return TRUE;
     }
-
+    */
+    
     //
     // If fast user switching is not enabled, play sound events on the
     // pseudo-console (Session 0) also.
     //
+
+    // @MOD - Skipped Peb (for now)
+    /*
     if ((IsPseudoConsoleSession()) &&
         (!IsFastUserSwitchingEnabled())) {
         return TRUE;
     }
-
+    */
+    
     //
     // Otherwise, no sound.
     //

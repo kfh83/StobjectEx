@@ -3,6 +3,7 @@
 //#include <ntrtl.h>
 //#include <nturtl.h>
 
+#include ".\Shundoc\shundoc.h"
 #include <windows.h>
 #include <windowsx.h>
 #include <regstr.h>

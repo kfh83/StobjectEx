@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <initguid.h>
 #include <usbioctl.h>
-//#include <wmium.h>
+#include ".\Bringovers\wmium.h"
 #include <wmistr.h>
 #include <tchar.h>
 #include <setupapi.h>
