@@ -36,7 +36,7 @@
 
 #include <ntstatus.h>
 
-#pragma comment(lib, "Ntoskrnl.lib") // NEEDS THE FUCKING DDK :sob:
+#pragma comment(lib, ".\\Ntoskrnl.lib") // NEEDS THE FUCKING DDK :sob:
 
 #include <windows.h>
 #include <tchar.h>
