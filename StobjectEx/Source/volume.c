@@ -31,7 +31,7 @@
 
 #include <ks.h>
 #include <ksmedia.h>
-#include <mmddkp.h>
+//#include <mmddkp.h>
 
 
 #define HWAVEOUT_MAPPER       ((HWAVEOUT)IntToPtr(WAVE_MAPPER))

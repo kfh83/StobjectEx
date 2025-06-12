@@ -26,9 +26,9 @@
 
 #include "stdafx.h"
 
-#include <nt.h>
-#include <ntrtl.h>
-#include <nturtl.h>
+//#include <nt.h>
+//#include <ntrtl.h>
+//#include <nturtl.h>
 
 #include <initguid.h>
 #include <ntpoapi.h>

@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include <nt.h>
-#include <ntrtl.h>
-#include <nturtl.h>
+//#include <nt.h>
+//#include <ntrtl.h>
+//#include <nturtl.h>
 #include <wtsapi32.h>
-#include <faxreg.h>
+//#include <faxreg.h>
 #include "systray.h"
 
 #ifndef FAX_SYS_TRAY_DLL

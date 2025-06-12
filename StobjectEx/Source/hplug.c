@@ -8,9 +8,9 @@
 
 #include "stdafx.h"
 
-#include <nt.h>
-#include <ntrtl.h>
-#include <nturtl.h>
+//#include <nt.h>
+//#include <ntrtl.h>
+//#include <nturtl.h>
 
 #include "systray.h"
 #include <setupapi.h>
