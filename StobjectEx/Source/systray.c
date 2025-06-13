@@ -610,24 +610,6 @@ VOID SysTray_NotifyIcon(HWND hWnd, UINT uCallbackMessage, DWORD Message, HICON h
 *
 *******************************************************************************/
 
-LPTSTR CDECL LoadDynamicString(UINT StringID, ...)
-{
-    TCHAR   Buffer[256];
-    LPTSTR  pStr=NULL;
-    va_list Marker;
-
-    // va_start is a macro...it breaks when you use it as an assign
-    va_start(Marker, StringID);
-
-    LoadString(g_hInstance, StringID, Buffer, ARRAYSIZE(Buffer));
-
-    FormatMessage(FORMAT_MESSAGE_FROM_STRING | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                  (void *) (LPTSTR) Buffer, 0, 0, (LPTSTR) (LPTSTR *) &pStr, 0, &Marker);
-
-    return pStr;
-}
-
-
 
 VOID SetIconFocus(HWND hwnd, UINT uiIcon)
 {

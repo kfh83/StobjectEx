@@ -60,8 +60,11 @@
     <ClCompile Include="Source\access.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Shundoc\shundoc.cpp">
-      <Filter>Source Files\Shundoc</Filter>
+    <ClCompile Include="Source\Bringovers\SHFusion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shundoc\shundoc.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,8 +95,23 @@
     <ClInclude Include="Source\Shundoc\shundoc.h">
       <Filter>Source Files\Shundoc</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bringovers\empty.h">
-      <Filter>Source Files\Bringovers</Filter>
+    <ClInclude Include="Source\Bringovers\cscuiext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bringovers\Help.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bringovers\SHFusion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bringovers\systrayp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bringovers\WinUserP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bringovers\wmium.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

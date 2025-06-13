@@ -20,13 +20,6 @@ SysTray_NotifyIcon(
     LPCTSTR lpTip
     );
 
-LPTSTR
-NEAR CDECL
-LoadDynamicString(
-    UINT StringID,
-    ...
-    );
-
 UINT EnableService(UINT uNewSvcMask, BOOL fEnable);
 BOOL PASCAL GenericGetSet(HKEY hKey, LPCTSTR pszValue, LPVOID pData,
                           ULONG  cbSize, BOOL   bSet);

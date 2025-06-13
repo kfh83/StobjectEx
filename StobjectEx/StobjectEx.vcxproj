@@ -104,13 +104,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Setupapi.lib;Shlwapi.lib;Winmm.lib;Wtsapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Setupapi.lib;Shlwapi.lib;Winmm.lib;Wtsapi32.lib;PowrProf.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,6 +123,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,7 +135,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\access.c" />
-    <ClCompile Include="Source\Bringovers\powrprof.c" />
     <ClCompile Include="Source\Bringovers\SHFusion.cpp" />
     <ClCompile Include="Source\cfact.cpp" />
     <ClCompile Include="Source\csc.c" />
@@ -140,7 +142,7 @@
     <ClCompile Include="Source\hplug.c" />
     <ClCompile Include="Source\power.c" />
     <ClCompile Include="Source\print.cpp" />
-    <ClCompile Include="Source\Shundoc\shundoc.cpp" />
+    <ClCompile Include="Source\Shundoc\shundoc.c" />
     <ClCompile Include="Source\stobject.cpp" />
     <ClCompile Include="Source\systray.c" />
     <ClCompile Include="Source\usbui.c" />

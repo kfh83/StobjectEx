@@ -97,7 +97,8 @@ VOID USBUI_WaitRoutineCallback(WMIHANDLE Handle, BOOLEAN Unused) {
     //ASSERT(!Unused);
     UnregisterWaitEx(g_hWait, NULL);
     g_hWait = NULL;
-    WmiReceiveNotifications(1, &Handle, USBUI_EventCallbackRoutine, (ULONG_PTR)NULL);
+    // @MOD - Come Back here
+    //WmiReceiveNotifications(1, &Handle, USBUI_EventCallbackRoutine, (ULONG_PTR)NULL);
     RegisterWaitForSingleObject(&g_hWait,
                                  Handle,
                                  USBUI_WaitRoutineCallback,
@@ -115,9 +116,13 @@ int USBUI_ErrorMessagesEnable(BOOL fEnable)
     if (fEnable) {
         //ASSERT(!g_hWait);
         //ASSERT(!hWmi);
+        
+        // @MOD - Come Back here
+        /*
         status = WmiOpenBlock((LPGUID) &GUID_USB_WMI_STD_DATA,
                               WMIGUID_NOTIFICATION | SYNCHRONIZE,
                               &hWmi);
+        */
 
         if (!status) {
             result = RegisterWaitForSingleObject(&g_hWait,
@@ -134,7 +139,8 @@ int USBUI_ErrorMessagesEnable(BOOL fEnable)
             result = UnregisterWait(g_hWait);
         }
         if (hWmi) {
-            status = WmiCloseBlock(hWmi);
+            // @MOD - Come Back here
+            //status = WmiCloseBlock(hWmi);
         }
         hWmi = NULL;
         g_hWait = NULL;
