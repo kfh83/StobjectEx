@@ -110,6 +110,7 @@ STDAPI_(int) SysTrayMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lp
     HWND hExistWnd = FindWindow(SYSTRAY_CLASSNAME, NULL);
     UINT iEnableServ = StrToInt(lpszCmdLine);
 
+    SHUndocInit();
     CoInitializeEx (NULL, COINIT_DISABLE_OLE1DDE | COINIT_APARTMENTTHREADED);
 
     g_hInstance = hInstance;

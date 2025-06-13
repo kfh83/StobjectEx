@@ -219,6 +219,7 @@ HWND DestroyBatMeter(HWND hWnd);
 BOOL BatMeterCapabilities(PUINT* ppuiBatCount);
 BOOL UpdateBatMeter(HWND hWnd, BOOL bShowMulti, BOOL bForceUpdate, PBATTERY_STATE pbsComposite);
 HWND CreateBatMeter(HWND hwndParent, HWND hwndFrame, BOOL bShowMulti, PBATTERY_STATE pbsComposite);
+LPTSTR CDECL LoadDynamicString(UINT StringID, ...);
 
 //
 //  Load module stuff

@@ -7,6 +7,11 @@
 #include "strsafe.h"
 #include "Bringovers/shfusion.h"
 
+#pragma comment(linker,"/EXPORT:DllGetClassObject")
+#pragma comment(linker,"/EXPORT:DllCanUnloadNow")
+#pragma comment(linker,"/EXPORT:DllRegisterServer")
+#pragma comment(linker,"/EXPORT:DllUnregisterServer")
+
 // One lock for each running component + one lock per LockServer call
 long g_cLocks = 0;
 HINSTANCE g_hinstDll = NULL;
