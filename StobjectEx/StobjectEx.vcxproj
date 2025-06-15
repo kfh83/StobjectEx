@@ -184,6 +184,8 @@
     <None Include="Source\stobject.def" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Resources\BMP\batico16.bmp" />
+    <Image Include="Resources\BMP\batticos.bmp" />
     <Image Include="Resources\ICO\battplug.ico" />
     <Image Include="Resources\ICO\csc.ico" />
     <Image Include="Resources\ICO\csc1.ico" />

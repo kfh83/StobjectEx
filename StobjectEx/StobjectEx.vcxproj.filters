@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Bringovers">
       <UniqueIdentifier>{26dc0190-8c2b-4647-9a1d-6326cebe07c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\BMP">
+      <UniqueIdentifier>{10c44f51-09a1-454d-9055-b6c2b84201d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\cfact.cpp">
@@ -110,9 +113,6 @@
     <ClInclude Include="Source\Bringovers\WinUserP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bringovers\wmium.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\systray.rc">
@@ -128,6 +128,9 @@
     </None>
     <None Include="Resources\AVI\to_fax.avi">
       <Filter>Resource Files\AVI</Filter>
+    </None>
+    <None Include="Source\stobject.def">
+      <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +250,12 @@
     </Image>
     <Image Include="Resources\ICO\volume.ico">
       <Filter>Resource Files\ICO</Filter>
+    </Image>
+    <Image Include="Resources\BMP\batticos.bmp">
+      <Filter>Resource Files\BMP</Filter>
+    </Image>
+    <Image Include="Resources\BMP\batico16.bmp">
+      <Filter>Resource Files\BMP</Filter>
     </Image>
   </ItemGroup>
 </Project>

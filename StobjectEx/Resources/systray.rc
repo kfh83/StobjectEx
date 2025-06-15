@@ -12,6 +12,7 @@
 #include "..\Source\version.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 #include "..\Source\stresid.h"
+#include "..\Source\Shundoc\shundoc.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -75,6 +76,14 @@ BEGIN
     LTEXT           "",IDC_STATIC_FRAME_BATMETER,11,29,229,178,NOT
                     WS_VISIBLE
 END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BATTS               BITMAP    DISCARDABLE                  ".\BMP\batticos.bmp"
+IDB_BATTS16             BITMAP    DISCARDABLE                  ".\BMP\batico16.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
