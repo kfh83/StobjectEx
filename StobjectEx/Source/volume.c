@@ -741,7 +741,7 @@ void Volume_ControlPanel(HWND hwnd)
 {
         const TCHAR szOpen[]    = TEXT ("open");
         const TCHAR szRunDLL[]  = TEXT ("RUNDLL32.EXE");
-        const TCHAR szParams[]  = TEXT ("MMSYS.CPL,ShowFullControlPanel");
+        const TCHAR szParams[]  = TEXT ("shell32.dll,Control_RunDLL MMSYS.CPL,,0"); // Playback tab
 
         ShellExecute(NULL, szOpen, szRunDLL, szParams, NULL, SW_SHOWNORMAL);
 }

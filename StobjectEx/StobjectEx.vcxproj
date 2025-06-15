@@ -164,7 +164,6 @@
     <ClInclude Include="Source\Bringovers\SHFusion.h" />
     <ClInclude Include="Source\Bringovers\systrayp.h" />
     <ClInclude Include="Source\Bringovers\WinUserP.h" />
-    <ClInclude Include="Source\Bringovers\wmium.h" />
     <ClInclude Include="Source\cfact.h" />
     <ClInclude Include="Source\pccrdapi.h" />
     <ClInclude Include="Source\Shundoc\shundoc.h" />

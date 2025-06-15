@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <initguid.h>
 #include <usbioctl.h>
-#include ".\Bringovers\wmium.h"
 #include <wmistr.h>
 #include <tchar.h>
 #include <setupapi.h>
@@ -98,7 +97,7 @@ VOID USBUI_WaitRoutineCallback(WMIHANDLE Handle, BOOLEAN Unused) {
     UnregisterWaitEx(g_hWait, NULL);
     g_hWait = NULL;
     // @MOD - Come Back here
-    //WmiReceiveNotifications(1, &Handle, USBUI_EventCallbackRoutine, (ULONG_PTR)NULL);
+    WmiReceiveNotificationsW(1, &Handle, USBUI_EventCallbackRoutine, (ULONG_PTR)NULL);
     RegisterWaitForSingleObject(&g_hWait,
                                  Handle,
                                  USBUI_WaitRoutineCallback,
@@ -118,11 +117,11 @@ int USBUI_ErrorMessagesEnable(BOOL fEnable)
         //ASSERT(!hWmi);
         
         // @MOD - Come Back here
-        /*
+        
         status = WmiOpenBlock((LPGUID) &GUID_USB_WMI_STD_DATA,
                               WMIGUID_NOTIFICATION | SYNCHRONIZE,
                               &hWmi);
-        */
+        
 
         if (!status) {
             result = RegisterWaitForSingleObject(&g_hWait,
@@ -140,7 +139,7 @@ int USBUI_ErrorMessagesEnable(BOOL fEnable)
         }
         if (hWmi) {
             // @MOD - Come Back here
-            //status = WmiCloseBlock(hWmi);
+            status = WmiCloseBlock(hWmi);
         }
         hWmi = NULL;
         g_hWait = NULL;

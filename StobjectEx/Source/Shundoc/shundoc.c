@@ -1247,6 +1247,9 @@ BOOL BatMeterCapabilities(PUINT* ppuiBatCount)
 //
 
 BOOL(WINAPI* PowerCapabilities)();
+ULONG(WINAPI* WmiCloseBlock)(IN WMIHANDLE DataBlockHandle);
+ULONG(WINAPI* WmiOpenBlock)(IN GUID *Guid, IN ULONG DesiredAccess, OUT WMIHANDLE *DataBlockHandle);
+ULONG(WINAPI* WmiReceiveNotificationsW)(IN ULONG HandleCount, IN HANDLE *HandleList, IN NOTIFICATIONCALLBACK Callback, IN ULONG_PTR DeliveryContext);
 
 //
 // Function loader
@@ -1273,6 +1276,11 @@ BOOL SHUndocInit(void)
 {
     LOAD_MODULE(batmeter);
     LOAD_FUNCTION(batmeter, PowerCapabilities);
+
+    LOAD_MODULE(advapi32);
+    LOAD_FUNCTION(advapi32, WmiCloseBlock);
+    LOAD_FUNCTION(advapi32, WmiOpenBlock);
+    LOAD_FUNCTION(advapi32, WmiReceiveNotificationsW);
     
     return TRUE;
 }

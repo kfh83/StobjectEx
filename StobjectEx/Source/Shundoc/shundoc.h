@@ -11,6 +11,7 @@
 //--------------------------------------------------------------------------
 
 #include <Windows.h>
+#include <wmistr.h>
 
 //
 //  Macros
@@ -210,6 +211,15 @@ typedef struct _BATTERY_STATE{
 
 typedef HANDLE LPSHChangeNotificationLock;
 typedef LRESULT (CALLBACK *WALKENUMPROC)(PBATTERY_STATE, HWND, LPARAM, LPARAM);
+typedef PVOID WMIHANDLE, *PWMIHANDLE, MOFHANDLE, *PMOFHANDLE;
+typedef void (
+#ifndef MIDL_PASS
+WINAPI
+#endif
+*NOTIFICATIONCALLBACK)(
+    PWNODE_HEADER Wnode,
+    UINT_PTR NotificationContext
+    );
 
 //
 //  Functions
@@ -226,5 +236,8 @@ LPTSTR CDECL LoadDynamicString(UINT StringID, ...);
 //
 
 extern BOOL(WINAPI* PowerCapabilities)();
+extern ULONG(WINAPI* WmiCloseBlock)(IN WMIHANDLE DataBlockHandle);
+extern ULONG(WINAPI* WmiOpenBlock)(IN GUID *Guid, IN ULONG DesiredAccess, OUT WMIHANDLE *DataBlockHandle);
+extern ULONG(WINAPI* WmiReceiveNotificationsW)(IN ULONG HandleCount, IN HANDLE *HandleList, IN NOTIFICATIONCALLBACK Callback, IN ULONG_PTR DeliveryContext);
 
 
