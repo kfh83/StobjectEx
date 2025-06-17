@@ -17,6 +17,7 @@
 #include <cfgmgr32.h>
 #include <dbt.h>
 #include <initguid.h>
+#include <devpkey.h>
 #include <devguid.h>
 #include <ks.h>
 #include <ksmedia.h>
@@ -65,6 +66,7 @@ BOOL ServiceEnabled = FALSE;
 HANDLE hEjectEvent = NULL;   // Event to if we are in the process of ejecting a device
 HDEVINFO g_hCurrentDeviceInfoSet = INVALID_HANDLE_VALUE;
 HDEVINFO g_hRemovableDeviceInfoSet = INVALID_HANDLE_VALUE;
+HDEVINFO g_hHotplugDeviceInfoSet = INVALID_HANDLE_VALUE; // Separate removable devices from hotplug devices to avoid duplicate insert/eject sounds
 extern HINSTANCE g_hInstance;       //  Global instance handle 4 this application.
 
 BOOL
@@ -156,76 +158,22 @@ BOOL
 IsHotPlugDevice(
     DEVINST DevInst
     )
-/**+
-
-    A device is considered a HotPlug device if the following are TRUE:
-        - has Capability CM_DEVCAP_REMOVABLE
-        - does NOT have Capability CM_DEVCAP_SURPRISEREMOVALOK
-        - does NOT have Capability CM_DEVCAP_DOCKDEVICE
-        - must be started (have the DN_STARTED devnode flag)
-            - unless has capability CM_DEVCAP_EJECTSUPPORTED
-
-Returns:
-    TRUE if this is a HotPlug device
-    FALSE if this is not a HotPlug device.
-
--**/
 {
-    DWORD Capabilities;
-    ULONG cbSize;
-    DWORD Status, Problem;
+    DEVPROPTYPE propType;
+    DEVPROP_BOOLEAN bSafeRemoval = 0;
+    ULONG bufferSize = sizeof(bSafeRemoval);
 
-    Capabilities = Status = Problem = 0;
-
-    cbSize = sizeof(Capabilities);
-
-    if (CM_Get_DevNode_Registry_Property(DevInst,
-                                         CM_DRP_CAPABILITIES,
-                                         NULL,
-                                         (PVOID)&Capabilities,
-                                         &cbSize,
-                                         0
-                                         ) != CR_SUCCESS) {
-
+    if (CM_Get_DevNode_Property(DevInst,
+        &DEVPKEY_Device_SafeRemovalRequired,
+        &propType,
+        &bSafeRemoval,
+        &bufferSize, 0
+    ) != CR_SUCCESS)
+    {
         return FALSE;
     }
 
-    if (CM_Get_DevNode_Status(&Status,
-                              &Problem,
-                              DevInst,
-                              0
-                              ) != CR_SUCCESS) {
-
-        return FALSE;
-    }
-
-    //
-    // If this device is not removable, or it is surprise removal ok, or
-    // it is a dock device, then it is not a hotplug device.
-    //
-    if ((!(Capabilities & CM_DEVCAP_REMOVABLE)) ||
-        (Capabilities & CM_DEVCAP_SURPRISEREMOVALOK) ||
-        (Capabilities & CM_DEVCAP_DOCKDEVICE)) {
-
-        return FALSE;
-    }
-
-    //
-    // We won't consider a device to be a hotplug device if it is not started,
-    // unless it is an eject capable device.
-    //
-    // The reason for this test is that a bus driver might set the
-    // CM_DEVCAP_REMOVABLE capability, but if the PDO doesn't get loaded then
-    // it can't set the CM_DEVCAP_SURPRISEREMOVALOK. So we won't trust the
-    // CM_DEVCAP_REMOVABLE capability if the PDO is not started.
-    //
-    if ((!(Capabilities & CM_DEVCAP_EJECTSUPPORTED)) &&
-        (!(Status & DN_STARTED))) {
-
-        return FALSE;
-    }
-
-    return TRUE;
+    return bSafeRemoval == DEVPROP_TRUE;
 }
 
 BOOL
@@ -724,7 +672,7 @@ IsDevInstInDeviceInfoSet(
 
 BOOL
 AnyHotPlugDevices(
-    IN  HDEVINFO hRemovableDeviceInfoSet,
+    IN  HDEVINFO hHotplugDeviceInfoSet,
     IN  HDEVINFO hOldDeviceInfoSet,
     OUT PBOOL    bNewHotPlugDevice           OPTIONAL
     )
@@ -740,7 +688,7 @@ AnyHotPlugDevices(
         *bNewHotPlugDevice = FALSE;
     }
 
-    if (hRemovableDeviceInfoSet == INVALID_HANDLE_VALUE) {
+    if (hHotplugDeviceInfoSet == INVALID_HANDLE_VALUE) {
         return FALSE;
     }
 
@@ -752,7 +700,7 @@ AnyHotPlugDevices(
     DeviceInfoData.cbSize = sizeof(DeviceInfoData);
     dwMemberIndex = 0;
 
-    while (SetupDiEnumDeviceInfo(hRemovableDeviceInfoSet,
+    while (SetupDiEnumDeviceInfo(hHotplugDeviceInfoSet,
                                  dwMemberIndex,
                                  &DeviceInfoData)) {
 
@@ -831,7 +779,7 @@ UpdateRemovableDeviceList(
         return FALSE;
     }
 
-    if (g_hRemovableDeviceInfoSet == INVALID_HANDLE_VALUE) {
+    if (g_hRemovableDeviceInfoSet == INVALID_HANDLE_VALUE && g_hHotplugDeviceInfoSet == INVALID_HANDLE_VALUE) {
         //
         // If we don't already have a global device info set for removable
         // devices in the system, create one now.  No removable devices have
@@ -843,11 +791,15 @@ UpdateRemovableDeviceList(
                                                                   NULL,
                                                                   NULL);
 
+        g_hHotplugDeviceInfoSet = SetupDiCreateDeviceInfoListEx(NULL,
+                                                                NULL,
+                                                                NULL,
+                                                                NULL);
         //
         // If we couldn't create a list to store removable devices, there's no
         // point in checking anything else here.
         //
-        if (g_hRemovableDeviceInfoSet == INVALID_HANDLE_VALUE) {
+        if (g_hRemovableDeviceInfoSet == INVALID_HANDLE_VALUE && g_hHotplugDeviceInfoSet == INVALID_HANDLE_VALUE) {
             return FALSE;
         }
 
@@ -893,6 +845,43 @@ UpdateRemovableDeviceList(
                 //
                 SetupDiDeleteDeviceInfo(g_hRemovableDeviceInfoSet,
                                         &DeviceInfoData);
+            }
+
+            //
+            // Increment the enumeration index.
+            //
+            dwMemberIndex++;
+        }
+
+        DeviceInfoData.cbSize = sizeof(DeviceInfoData);
+        dwMemberIndex = 0;
+
+        while (SetupDiEnumDeviceInfo(g_hHotplugDeviceInfoSet,
+            dwMemberIndex,
+            &DeviceInfoData)) {
+
+            if (!IsDevInstInDeviceInfoSet(DeviceInfoData.DevInst,
+                hDeviceInfoSet,
+                NULL) || (!IsHotPlugDevice(DeviceInfoData.DevInst))) {
+
+#if DBG // DBG
+                if (SetupDiGetDeviceInstanceId(g_hHotplugDeviceInfoSet,
+                    &DeviceInfoData,
+                    DeviceInstanceId,
+                    MAX_DEVICE_ID_LEN,
+                    NULL)) {
+                    KdPrintEx((DPFLTR_PNPMGR_ID,
+                        (0x00000010 | DPFLTR_MASK),
+                        "HPLUG: Removing device %ws from g_hHotplugDeviceInfoSet.\n",
+                        DeviceInstanceId));
+                }
+#endif  // DBG
+
+                //
+                // Remove the device from the global list of hotplug devices.
+                //
+                SetupDiDeleteDeviceInfo(g_hHotplugDeviceInfoSet,
+                    &DeviceInfoData);
             }
 
             //
@@ -980,6 +969,32 @@ UpdateRemovableDeviceList(
                 }
             }
         }
+        if ((!IsDevInstInDeviceInfoSet(DeviceInfoData.DevInst,
+            g_hHotplugDeviceInfoSet,
+            NULL)) &&
+            (IsHotPlugDevice(DeviceInfoData.DevInst))) {
+            //
+            // Add the device to the global list of hotplug devices.
+            //
+            if (SetupDiGetDeviceInstanceId(hDeviceInfoSet,
+                &DeviceInfoData,
+                DeviceInstanceId,
+                MAX_DEVICE_ID_LEN,
+                NULL)) {
+                // @MOD - Skipped KdPrintEx
+                /*
+                KdPrintEx((DPFLTR_PNPMGR_ID,
+                           (0x00000010 | DPFLTR_MASK),
+                           "HPLUG: Adding device %ws to g_hHotplugDeviceInfoSet\n",
+                           DeviceInstanceId));
+                */
+                SetupDiOpenDeviceInfo(g_hHotplugDeviceInfoSet,
+                    DeviceInstanceId,
+                    NULL,
+                    0,
+                    NULL);
+            }
+        }
 
         //
         // Increment the enumeration index.
@@ -1052,7 +1067,6 @@ AddHotPlugDevices(
     PHOTPLUGDEVICES *HotPlugDevicesList
     )
 {
-    CONFIGRET ConfigRet;
     SP_DEVINFO_DATA DeviceInfoData;
     DWORD    dwMemberIndex;
 
@@ -1067,17 +1081,10 @@ AddHotPlugDevices(
     DeviceInfoData.cbSize = sizeof(DeviceInfoData);
     dwMemberIndex = 0;
 
-    while (SetupDiEnumDeviceInfo(g_hRemovableDeviceInfoSet,
+    while (SetupDiEnumDeviceInfo(g_hHotplugDeviceInfoSet,
                                  dwMemberIndex,
                                  &DeviceInfoData)) {
-
-        //
-        // If any removable device also meets the criteria of a hotplug device,
-        // add it to the linked list.
-        //
-        if (IsHotPlugDevice(DeviceInfoData.DevInst)) {
-            AddHotPlugDevice(DeviceInfoData.DevInst, HotPlugDevicesList);
-        }
+        AddHotPlugDevice(DeviceInfoData.DevInst, HotPlugDevicesList);
         dwMemberIndex++;
     }
 
@@ -1188,7 +1195,7 @@ HotPlugInit(
     // not, so we don't care if there are any new hotplug devices or not (we
     // won't even look at g_hCurrentDeviceInfoSet).
     //
-    bAnyHotPlugDevices = AnyHotPlugDevices(g_hRemovableDeviceInfoSet,
+    bAnyHotPlugDevices = AnyHotPlugDevices(g_hHotplugDeviceInfoSet,
                                            g_hCurrentDeviceInfoSet,
                                            NULL);
 
@@ -1324,12 +1331,29 @@ HotPlugEjectDevice_Thread(
     DEVNODE DevNode = (DEVNODE)(ULONG_PTR)pThreadParam;
     CONFIGRET ConfigRet;
 
-    ConfigRet = CM_Request_Device_Eject_Ex(DevNode,
+    ConfigRet = CM_Request_Device_Eject(DevNode,
                                            NULL,
                                            NULL,
                                            0,
-                                           0,
-                                           NULL);
+                                           0);
+
+    // If the device has safe removable property key, the parent should always be removable i think
+    // maybe not the best way
+    if (ConfigRet != CR_SUCCESS)
+    {
+        DEVINST parentDevNode;
+
+        CM_Get_Parent(
+            &parentDevNode,
+            DevNode,
+            0);
+
+        ConfigRet = CM_Request_Device_Eject(parentDevNode,
+            NULL,
+            NULL,
+            0,
+            0);
+    }
 
     //
     // Set the hEjectEvent so that the right-click popup menu will work again 
@@ -1639,7 +1663,7 @@ HotPlug_DeviceChangeTimer(
     // (which we just updated) against the old current set of devices in the
     // system.
     //
-    bAnyHotPlugDevices = AnyHotPlugDevices(g_hRemovableDeviceInfoSet,
+    bAnyHotPlugDevices = AnyHotPlugDevices(g_hHotplugDeviceInfoSet,
                                            g_hCurrentDeviceInfoSet,
                                            &bNewHotPlugDevice);
 
@@ -1765,6 +1789,11 @@ HotPlug_WmDestroy(
     if (g_hRemovableDeviceInfoSet != INVALID_HANDLE_VALUE) {
         SetupDiDestroyDeviceInfoList(g_hRemovableDeviceInfoSet);
         g_hRemovableDeviceInfoSet = INVALID_HANDLE_VALUE;
+    }
+
+    if (g_hHotplugDeviceInfoSet != INVALID_HANDLE_VALUE) {
+        SetupDiDestroyDeviceInfoList(g_hHotplugDeviceInfoSet);
+        g_hHotplugDeviceInfoSet = INVALID_HANDLE_VALUE;
     }
 }
 
