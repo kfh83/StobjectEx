@@ -104,10 +104,10 @@
 // String identifiers of IDD_BATMETER.
 #define IDS_ACLINEONLINE                        100
 #define IDS_BATTERYLEVELFORMAT                  101
-#define IDS_UNKNOWN                             102
+#define IDS_BMUNKNOWN                           102
 #define IDS_PERCENTREMAININGFORMAT              104
-#define IDS_TIMEREMFORMATHOUR                   105
-#define IDS_TIMEREMFORMATMIN                    106
+#define IDS_BMTIMEREMFORMATHOUR                 105
+#define IDS_BMTIMEREMFORMATMIN                  106
 #define IDS_BATTERIES                           109
 #define IDS_NOT_PRESENT                         110
 #define IDS_BATTCHARGING                        111
@@ -132,7 +132,7 @@
 #define STRSIZE(str)  (ULONG) ( (str) ? ((PCHAR) &str[strlen(str)] - (PCHAR)str) + 1 : 0 )
 
 //  Dialog box control identifiers.
-#define IDD_BATMETER                    100
+#define IDD_BATMETER                    101 // ID not the same as XP but it clashes with IDD_BATTERYMETER so we have to change it
 #define IDD_BATDETAIL                   126
 #define IDD_MOREINFO                    127
 
@@ -188,9 +188,7 @@ typedef struct _BATTERY_STATE{
     ULONG                  ulBatNum;               // Display battery number.
     ULONG                  ulTag;                  // Zero implies no battery.
     HANDLE                 hDevice;                // Handle to the battery device.
-#ifdef WINNT
     HDEVNOTIFY             hDevNotify;             // Device notification handle.
-#endif
     UINT                   uiIconIDcache;          // Cache of the last Icon ID.
     HICON                  hIconCache;             // Cache of the last Icon handle.
     HICON                  hIconCache16;           // As above but 16x16.

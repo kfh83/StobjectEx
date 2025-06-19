@@ -15,6 +15,7 @@
 #include <dbt.h>
 #include <poclass.h>
 #include <wchar.h>
+#include <setupapi.h>
 
 #include <powerbase.h>
 #include <shlobj_core.h>
@@ -62,6 +63,40 @@ UINT g_iMapBatNumToID [NUM_BAT+1][4]={
 };
 
 extern const DWORD g_ContextMenuHelpIDs[];  //Help ID's.
+
+static BOOL RegisterForDeviceNotification(PBATTERY_STATE pbs)
+{
+    DEV_BROADCAST_HANDLE dbh;
+
+    memset(&dbh, 0, sizeof(DEV_BROADCAST_HANDLE));
+
+    dbh.dbch_size = sizeof(DEV_BROADCAST_HANDLE);
+    dbh.dbch_devicetype = DBT_DEVTYP_HANDLE;
+    dbh.dbch_handle = pbs->hDevice;
+
+    if (!g_hwndBatMeter) {
+        wprintf(L"RegisterForDeviceNotification, NULL g_hwndBatMeter\n");
+        return FALSE;
+    }
+
+    pbs->hDevNotify = RegisterDeviceNotification(g_hwndBatMeter,
+        &dbh,
+        DEVICE_NOTIFY_WINDOW_HANDLE);
+
+    if (!pbs->hDevNotify) {
+        wprintf(L"RegisterDeviceNotification failed\n");
+        return FALSE;
+    }
+    return TRUE;
+}
+
+void UnregisterForDeviceNotification(PBATTERY_STATE pbs)
+{
+    if (pbs->hDevNotify) {
+        UnregisterDeviceNotification(pbs->hDevNotify);
+        pbs->hDevNotify = NULL;
+    }
+}
 
 UINT MapBatInfoToIconID(PBATTERY_STATE pbs)
 {
@@ -315,7 +350,7 @@ BOOL UpdateBatMeterProc(PBATTERY_STATE pbs, HWND hWnd, LPARAM bShowMulti, LPARAM
                                         pbs->ulBatLifePercent);
         }
         else {
-            lpsz = LoadDynamicString(IDS_UNKNOWN);
+            lpsz = LoadDynamicString(IDS_BMUNKNOWN);
         }
         DisplayFreeStr(hWnd, IDC_REMAINING, lpsz, NO_FREE_STR);
 
@@ -337,10 +372,10 @@ BOOL UpdateBatMeterProc(PBATTERY_STATE pbs, HWND hWnd, LPARAM bShowMulti, LPARAM
             UINT uiHour = pbs->ulBatLifeTime / 3600;
             UINT uiMin = (pbs->ulBatLifeTime % 3600) / 60;
             if (uiHour) {
-                lpsz = LoadDynamicString(IDS_TIMEREMFORMATHOUR, uiHour, uiMin);
+                lpsz = LoadDynamicString(IDS_BMTIMEREMFORMATHOUR, uiHour, uiMin);
             }
             else {
-                lpsz = LoadDynamicString(IDS_TIMEREMFORMATMIN, uiMin);
+                lpsz = LoadDynamicString(IDS_BMTIMEREMFORMATMIN, uiMin);
             }
             DisplayFreeStr(hWnd, IDC_TIMEREMAINING, lpsz, FREE_STR);
             ShowHideItem(hWnd, IDC_TOTALTIME, TRUE);
@@ -587,9 +622,7 @@ BOOL RemoveBatteryStateDevice(PBATTERY_STATE pbs)
         pbs->bsPrev->bsNext = pbs->bsNext;
     }
 
-#ifdef winnt
     UnregisterForDeviceNotification(pbs);
-#endif
     
     // Free the battery driver handle if one was opened.
     if (pbs->hDevice != INVALID_HANDLE_VALUE) {
@@ -665,7 +698,7 @@ PBATTERY_STATE AddBatteryStateDevice(LPTSTR lpszName, ULONG ulBatNum)
 
     // Allocate storage for new battery device state.
     if (pbs = LocalAlloc(LPTR, sizeof(BATTERY_STATE))) {
-        if (lpsz = LocalAlloc(0, STRSIZE(lpszName))) {
+        if (lpsz = LocalAlloc(0, WSTRSIZE(lpszName))) {
             lstrcpy(lpsz, lpszName);
             pbs->lpszDeviceName = lpsz;
             pbs->ulSize = sizeof(BATTERY_STATE);
@@ -677,10 +710,8 @@ PBATTERY_STATE AddBatteryStateDevice(LPTSTR lpszName, ULONG ulBatNum)
                                       FILE_SHARE_READ | FILE_SHARE_WRITE,
                                       NULL, OPEN_EXISTING,
                                       FILE_ATTRIBUTE_NORMAL, NULL);
-#ifdef WINNT
             // Setup for notification by PNP when battery goes away. 
             RegisterForDeviceNotification(pbs);
-#endif
             // Get the current battery info from the battery driver.
             if (UpdateBatInfoProc(pbs, NULL, 0, 0)) {
 
@@ -1005,10 +1036,8 @@ void CleanupBatteryData(void)
 
 LRESULT CALLBACK BatMeterDlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-#ifdef WINNT
     UINT i, j;
     PBATTERY_STATE pbsTemp;
-#endif // WINNT
 
     UINT uiBatNum;
 
@@ -1050,7 +1079,6 @@ LRESULT CALLBACK BatMeterDlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
          break;
 
       case WM_DEVICECHANGE:
-#ifdef WINNT
          if ((wParam == DBT_DEVICEQUERYREMOVE) || (wParam == DBT_DEVICEREMOVECOMPLETE)) {
             if ( ((PDEV_BROADCAST_HANDLE)lParam)->dbch_devicetype == DBT_DEVTYP_HANDLE) {
 
@@ -1104,14 +1132,6 @@ LRESULT CALLBACK BatMeterDlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                }
             }
          }
-#else
-         if (wParam == DBT_DEVICEQUERYREMOVE) {
-            if (g_hwndBatMeter) {
-               // Close all of the batteries.
-               CleanupBatteryData();
-            }
-         }
-#endif
          return TRUE;
 
       case WM_HELP:             // F1
@@ -1207,6 +1227,110 @@ HWND DestroyBatMeter(HWND hWnd)
     return g_hwndBatMeter;
 }
 
+UINT GetBatteryDriverNames(LPTSTR* lpszDriverNames)
+{
+    UINT                                uiDriverCount, uiIndex;
+    DWORD                               dwReqSize;
+    HDEVINFO                            hDevInfo;
+    SP_INTERFACE_DEVICE_DATA            InterfaceDevData;
+    PSP_INTERFACE_DEVICE_DETAIL_DATA    pFuncClassDevData;
+
+    // Free any old driver names.
+    FreeBatteryDriverNames(lpszDriverNames);
+    uiDriverCount = 0;
+
+#ifndef SIM_BATTERY
+    // Use the SETUPAPI.DLL interface to get the
+    // possible battery driver names.
+    hDevInfo = SetupDiGetClassDevs((LPGUID)&GUID_DEVICE_BATTERY, NULL, NULL,
+        DIGCF_PRESENT | DIGCF_INTERFACEDEVICE);
+
+    if (hDevInfo != INVALID_HANDLE_VALUE) {
+        InterfaceDevData.cbSize = sizeof(SP_DEVINFO_DATA);
+
+        uiIndex = 0;
+        while (uiDriverCount < NUM_BAT) {
+            if (SetupDiEnumInterfaceDevice(hDevInfo,
+                0,
+                (LPGUID)&GUID_DEVICE_BATTERY,
+                uiIndex,
+                &InterfaceDevData)) {
+
+                // Get the required size of the function class device data.
+                SetupDiGetInterfaceDeviceDetail(hDevInfo,
+                    &InterfaceDevData,
+                    NULL,
+                    0,
+                    &dwReqSize,
+                    NULL);
+
+                pFuncClassDevData = LocalAlloc(0, dwReqSize);
+                if (pFuncClassDevData != NULL) {
+                    pFuncClassDevData->cbSize =
+                        sizeof(SP_INTERFACE_DEVICE_DETAIL_DATA);
+
+                    if (SetupDiGetInterfaceDeviceDetail(hDevInfo,
+                        &InterfaceDevData,
+                        pFuncClassDevData,
+                        dwReqSize,
+                        &dwReqSize,
+                        NULL)) {
+
+                        dwReqSize = (lstrlen(pFuncClassDevData->DevicePath) + 1) * sizeof(TCHAR);
+                        lpszDriverNames[uiDriverCount] = LocalAlloc(0, dwReqSize);
+
+                        if (lpszDriverNames[uiDriverCount]) {
+                            lstrcpyn(lpszDriverNames[uiDriverCount],
+                                pFuncClassDevData->DevicePath,
+                                dwReqSize);
+                            uiDriverCount++;
+                        }
+                    }
+                    else {
+                        wprintf(L"SetupDiGetInterfaceDeviceDetail, failed: %d", GetLastError());
+                    }
+
+                    LocalFree(pFuncClassDevData);
+                }
+            }
+            else {
+                if (ERROR_NO_MORE_ITEMS == GetLastError()) {
+                    break;
+                }
+                else {
+                    wprintf(L"SetupDiEnumInterfaceDevice, failed: %d\n", GetLastError());
+                }
+            }
+            uiIndex++;
+        }
+        SetupDiDestroyDeviceInfoList(hDevInfo);
+    }
+    else {
+        wprintf(L"SetupDiGetClassDevs on GUID_DEVICE_BATTERY, failed: %d\n", GetLastError());
+    }
+#else
+    // Simulate batteries.
+    {
+        UINT i;
+        static UINT uiState = 1;
+
+        uiDriverCount = 0;
+        for (i = 0; i <= uiState; i++) {
+            lpszDriverNames[i] = LocalAlloc(0, STRSIZE(TEXT("SIMULATED_BATTERY_0")));
+            if (lpszDriverNames[i]) {
+                wsprintf(lpszDriverNames[i], TEXT("SIMULATED_BATTERY_%d"), i);
+                uiDriverCount += 1;
+            }
+        }
+        uiState++;
+        if (uiState >= NUM_BAT) {
+            uiState = 0;
+        }
+    }
+#endif
+    return uiDriverCount;
+}
+
 BOOL BatMeterCapabilities(PUINT* ppuiBatCount)
 {
 #ifndef SIM_BATTERY
@@ -1222,8 +1346,7 @@ BOOL BatMeterCapabilities(PUINT* ppuiBatCount)
     // Make sure we have batteries to query.
     if (GetPwrCapabilities(&spc)) {
         if (spc.SystemBatteriesPresent) {
-            // @MOD - Come back to this
-            g_uiDriverCount = 0;//GetBatteryDriverNames(g_lpszDriverNames);
+            g_uiDriverCount = GetBatteryDriverNames(g_lpszDriverNames);
             if (g_uiDriverCount != 0) {
                 g_uiBatCount = g_uiDriverCount;
 
