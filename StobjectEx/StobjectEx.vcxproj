@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\access.c" />
+    <ClCompile Include="Source\audiocontroller.c" />
     <ClCompile Include="Source\Bringovers\SHFusion.cpp" />
     <ClCompile Include="Source\cfact.cpp" />
     <ClCompile Include="Source\csc.c" />
@@ -159,6 +160,7 @@
     <ClCompile Include="Source\volume.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\audiocontroller.h" />
     <ClInclude Include="Source\Bringovers\cscuiext.h" />
     <ClInclude Include="Source\Bringovers\Help.h" />
     <ClInclude Include="Source\Bringovers\SHFusion.h" />

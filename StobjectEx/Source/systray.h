@@ -64,12 +64,9 @@ BOOL Volume_CheckEnable(HWND hWnd, BOOL bEnabled);
 void Volume_DeviceChange(HWND hWnd, WPARAM wParam, LPARAM lParam);
 void Volume_Notify(HWND hWnd, WPARAM wParam, LPARAM lParam);
 void Volume_Timer(HWND hWnd);
-void Volume_LineChange(HWND hWnd, HMIXER hmx, DWORD dwID );
-void Volume_ControlChange(HWND hWnd, HMIXER hmx, DWORD dwID );
 void Volume_Shutdown(HWND hWnd);
-void Volume_WinMMDeviceChange(HWND hWnd);
+void Volume_AudioChange(HWND hWnd, WPARAM wParam, LPARAM lParam);
 void Volume_HandlePowerBroadcast(HWND hWnd, WPARAM wParam, LPARAM lParam);
-void Volume_DeviceChange_Cleanup(void);
 void Volume_WmDestroy(HWND hWnd);
 
 BOOL HotPlug_CheckEnable(HWND hWnd, BOOL bEnabled);

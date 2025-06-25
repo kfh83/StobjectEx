@@ -6,6 +6,7 @@
 #include <wtsapi32.h>
 //#include <faxreg.h>
 #include "systray.h"
+#include "audiocontroller.h"
 
 #ifndef FAX_SYS_TRAY_DLL
 #define FAX_SYS_TRAY_DLL       TEXT("fxsst.dll")            // Fax notification bar DLL (loaded by STObject.dll)
@@ -28,8 +29,6 @@ static UINT g_uEnabledSvcs = 0;
 
 //  Context sensitive help array used by the WinHelp engine.
 extern const DWORD g_ContextMenuHelpIDs[];
-
-UINT g_msg_winmm_devicechange = 0;
 
 DWORD g_msgTaskbarCreated;
 LRESULT CALLBACK SysTrayWndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam);
@@ -115,7 +114,6 @@ STDAPI_(int) SysTrayMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lp
 
     g_hInstance = hInstance;
     g_uiShellHook = 0;
-    g_msg_winmm_devicechange = RegisterWindowMessage(TEXT("winmm_devicechange")); 
 
     if (hExistWnd)
     {
@@ -282,16 +280,6 @@ LRESULT CALLBACK SysTrayWndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM l
         return 0;
     }
 
-
-    if (Message == g_msg_winmm_devicechange)
-    {
-        if (g_uEnabledSvcs & STSERVICE_VOLUME)
-        {
-            Volume_WinMMDeviceChange(hWnd);
-        }
-        return 0;
-    }
-
     switch (Message)
     {
     case WM_CREATE:
@@ -337,12 +325,12 @@ LRESULT CALLBACK SysTrayWndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM l
     case STWM_GETSTATE:
         return((BOOL)(g_uEnabledSvcs & (UINT)wParam));
 
-    case MM_MIXM_CONTROL_CHANGE:
-        Volume_ControlChange(hWnd, (HMIXER)wParam, (DWORD)lParam);
+    case MYWM_AUDIODEV_CHANGE:
+        Volume_DeviceChange(hWnd, wParam, lParam);
         break;
 
-    case MM_MIXM_LINE_CHANGE:
-        Volume_LineChange(hWnd, (HMIXER)wParam, (DWORD)lParam);
+    case MYWM_AUDIOVOL_CHANGE:
+        Volume_AudioChange(hWnd, wParam, lParam);
         break;
 
     case WM_ACTIVATE:
