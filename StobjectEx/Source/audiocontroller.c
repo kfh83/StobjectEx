@@ -92,7 +92,7 @@ HRESULT AudioController_IAudioEndpointVolumeCallback_OnNotify(AudioController* t
 	this = (IAudioEndpointVolumeCallback*)((char*)this - sizeof(IAudioEndpointVolumeCallback));
 	if (this->hwnd != NULL)
 	{
-		BOOL ret = PostMessage(this->hwnd, MYWM_AUDIOVOL_CHANGE, 0, 0);
+		PostMessage(this->hwnd, MYWM_AUDIOVOL_CHANGE, 0, 0);
 	}
 	return S_OK;
 }
@@ -151,19 +151,22 @@ HRESULT AudioController_Initialize(AudioController* this, HWND hwnd)
 
 HRESULT AudioController_Attach(AudioController* this)
 {
-	HRESULT hr;
+	HRESULT hr = E_FAIL;
 
 	this->pIAudioEndpointVolumeCallback = &AudioController_IAudioEndpointVolumeCallback_Vtbl;
 
-	hr = this->pIMMDeviceEnumerator->lpVtbl->GetDefaultAudioEndpoint(this->pIMMDeviceEnumerator, eRender, eMultimedia, &this->pIMMDevice);
-	if (SUCCEEDED(hr))
+	if (this->pIMMDeviceEnumerator != NULL)
 	{
-		hr = this->pIMMDevice->lpVtbl->Activate(
-			this->pIMMDevice, &IID_IAudioEndpointVolume, CLSCTX_INPROC_SERVER, NULL, (void**)&this->pIAudioEndpointVolume);
+		hr = this->pIMMDeviceEnumerator->lpVtbl->GetDefaultAudioEndpoint(this->pIMMDeviceEnumerator, eRender, eMultimedia, &this->pIMMDevice);
 		if (SUCCEEDED(hr))
 		{
-			hr = this->pIAudioEndpointVolume->lpVtbl->RegisterControlChangeNotify(
-				this->pIAudioEndpointVolume, &this->pIAudioEndpointVolumeCallback);
+			hr = this->pIMMDevice->lpVtbl->Activate(
+				this->pIMMDevice, &IID_IAudioEndpointVolume, CLSCTX_INPROC_SERVER, NULL, (void**)&this->pIAudioEndpointVolume);
+			if (SUCCEEDED(hr))
+			{
+				hr = this->pIAudioEndpointVolume->lpVtbl->RegisterControlChangeNotify(
+					this->pIAudioEndpointVolume, &this->pIAudioEndpointVolumeCallback);
+			}
 		}
 	}
 	else

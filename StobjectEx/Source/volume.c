@@ -88,6 +88,7 @@ BOOL Volume_Init(HWND hWnd, PBOOL *bShowIcon)
     // We still depend on sndvol32
     if (!FindSystemFile(szVolApp, NULL, 0))
     {
+        EnableService(STSERVICE_VOLUME, FALSE);
         return FALSE;
     }
 
@@ -99,6 +100,7 @@ BOOL Volume_Init(HWND hWnd, PBOOL *bShowIcon)
     {
         if (HRESULT_FROM_WIN32(ERROR_NOT_FOUND) != hr)
         {
+            EnableService(STSERVICE_VOLUME, FALSE);
             return FALSE;
         }
         // Even if a device is not found, we initialize and hide the icon

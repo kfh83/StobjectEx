@@ -326,11 +326,17 @@ LRESULT CALLBACK SysTrayWndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM l
         return((BOOL)(g_uEnabledSvcs & (UINT)wParam));
 
     case MYWM_AUDIODEV_CHANGE:
-        Volume_DeviceChange(hWnd, wParam, lParam);
+        if (g_uEnabledSvcs & STSERVICE_VOLUME)
+        {
+            Volume_DeviceChange(hWnd, wParam, lParam);
+        }
         break;
 
     case MYWM_AUDIOVOL_CHANGE:
-        Volume_AudioChange(hWnd, wParam, lParam);
+        if (g_uEnabledSvcs & STSERVICE_VOLUME)
+        {
+            Volume_AudioChange(hWnd, wParam, lParam);
+        }
         break;
 
     case WM_ACTIVATE:
@@ -421,17 +427,14 @@ LRESULT CALLBACK SysTrayWndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM l
 
     case WM_POWERBROADCAST:
          Power_OnPowerBroadcast(hWnd, wParam, lParam);
-         Volume_HandlePowerBroadcast(hWnd, wParam, lParam);
+         if (g_uEnabledSvcs & STSERVICE_VOLUME)
+         {
+             Volume_HandlePowerBroadcast(hWnd, wParam, lParam);
+         }
          break;
 
     case WM_DEVICECHANGE:
         Power_OnDeviceChange(hWnd, wParam, lParam);
-
-        if (g_uEnabledSvcs & STSERVICE_VOLUME)
-        {
-            Volume_DeviceChange(hWnd, wParam, lParam);
-        }
-
         HotPlug_DeviceChange(hWnd, wParam, lParam);
         break;
 
