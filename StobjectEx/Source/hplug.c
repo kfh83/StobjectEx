@@ -36,18 +36,6 @@ HotplugPlaySoundThisSession(
 #define DEVICE_REMOVAL_SOUND            TEXT("DeviceDisconnect")
 #define DEVICE_FAILURE_SOUND            TEXT("DeviceFail")
 
-//
-// Simple checks for console / remote TS sessions.
-//
-#define MAIN_SESSION      ((ULONG)0)
-#define THIS_SESSION      ((ULONG)NtCurrentPeb()->SessionId)
-#define CONSOLE_SESSION   ((ULONG)USER_SHARED_DATA->ActiveConsoleId)
-
-#define IsConsoleSession()        (BOOL)(THIS_SESSION == CONSOLE_SESSION)
-#define IsRemoteSession()         (BOOL)(THIS_SESSION != CONSOLE_SESSION)
-#define IsPseudoConsoleSession()  (BOOL)(THIS_SESSION == MAIN_SESSION)
-
-
 #define HPLUG_EJECT_EVENT           TEXT("HPlugEjectEvent")
 
 typedef struct _HotPlugDevices {
@@ -1924,81 +1912,8 @@ BOOL
 HotplugPlaySoundThisSession(
     VOID
     )
-
-/*++
-
-Routine Description:
-
-    This routine determines whether a sound should be played in the current
-    session.
-
-Arguments:
-
-    None.
-
-Return Value:
-
-    Returns TRUE if sounds should be played in this session.
-
-Notes:
-
-    The user-mode plug and play manager (umpnpmgr.dll) implements the following
-    behavior for UI dialogs:
-
-    * When Fast User Switching is enabled, only the physical Console session
-      is used for UI dialogs.
-
-    * When Fast User Switching is not enabled, only Session 0 is used for UI
-      dialogs.
-
-    Since sound events require no user interaction there is no problem with
-    multiple sessions responding to these events simultaneously.
-
-    We should *always* play a sound on the physical console when possible, and
-    adopt a behavior similar to umpnpmgr for for the non-Fast User Switching
-    case, such that session 0 will also play sound events when possible because
-    it should be treated somewhat special in the non-FUS case...
-
-    ... BUT, since we disable the service altogether if the session is remote
-    and the user doesn't have permission to eject hotplug devices (so we don't
-    show the icon), we won't even respond to DBT_DEVNODES_CHANGED events, and
-    consequently won't play sound.  We could actually turn this on just by
-    allowing those events to be processed when the services is disabled, but
-    this function is successful.  Since the idea of allowing hardware events on
-    remote session 0 without FUS is really just for remote management, then it's
-    probably ok that we don't play sounds for a user that can't manage hardware.
-
---*/
-
 {
-    //
-    // Always play sound events on the physical console.
-    //
-
-    // @MOD - Skipped Peb (for now)
-    /*
-    if (IsConsoleSession()) {
-        return TRUE;
-    }
-    */
-    
-    //
-    // If fast user switching is not enabled, play sound events on the
-    // pseudo-console (Session 0) also.
-    //
-
-    // @MOD - Skipped Peb (for now)
-    /*
-    if ((IsPseudoConsoleSession()) &&
-        (!IsFastUserSwitchingEnabled())) {
-        return TRUE;
-    }
-    */
-    
-    //
-    // Otherwise, no sound.
-    //
-    return FALSE;
+    return !GetSystemMetrics(SM_REMOTESESSION);
 
 } // HotplugPlaySoundThisSession
 
