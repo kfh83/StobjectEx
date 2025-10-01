@@ -57,6 +57,7 @@ typedef struct _POWER_PROFILE_ENUM_PROC_PARAMS
 BOOL    g_bPowerEnabled;      // Tracks the power service state.
 UINT    g_uiPowerSchemeCount; // Number of power schemes, left context menu.
 HMENU   g_hMenu[2];           // Context menus.
+HPOWERNOTIFY g_hBatteryPercentage;
 
 // BatMeter creation parameters.
 HWND    g_hwndBatMeter;
@@ -165,7 +166,7 @@ DoUpdateFlags:
 
 void Power_OnPowerBroadcast(HWND hWnd, WPARAM wParam, LPARAM lParam)
 {
-   if (wParam == PBT_APMPOWERSTATUSCHANGE) {
+   if (wParam == PBT_APMPOWERSTATUSCHANGE || wParam == PBT_POWERSETTINGCHANGE) {
 
       // If the power icon is not showing (power service disabled) and
       // we are running on batteries, enable the systray power service.
@@ -722,6 +723,11 @@ BOOL RegisterForDeviceNotification(HWND hWnd)
 
 void Power_WmDestroy(HWND hWnd)
 {
+   if (g_hBatteryPercentage)
+   {
+      UnregisterPowerSettingNotification(g_hBatteryPercentage);
+      g_hBatteryPercentage = NULL;
+   }
    if (g_hDevNotify) {
       UnregisterDeviceNotification(g_hDevNotify);
       g_hDevNotify = NULL;
@@ -775,6 +781,11 @@ BOOL Power_CheckEnable(HWND hWnd, BOOL bSvcEnable)
       }
       else {
          BatteryMeterInit(hWnd);
+         g_hBatteryPercentage = RegisterPowerSettingNotification(
+             hWnd,
+             &GUID_BATTERY_PERCENTAGE_REMAINING,
+             DEVICE_NOTIFY_WINDOW_HANDLE
+             );
          Power_UpdateStatus(hWnd, NIM_ADD, FALSE);
       }
       g_bPowerEnabled = TRUE;
