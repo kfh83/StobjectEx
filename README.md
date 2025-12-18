@@ -5,7 +5,7 @@ Windows XP Shell tray objects for modern windows
 Intended for usage with [ExplorerEx](https://github.com/kfh83/ExplorerEx)
 
 ## How to setup
-1. Compile the project from source
+1. Grab an artifact from GitHub Actions (or compile it yoursef for whatever reason)
 2. Rename the resulting binary to something like stobjectex.dll then copy it over to ``%SystemRoot%\System32``
 3. Take sndvol32.exe from Windows XP Professional x64 Edition and place it also in System32 (for sound tray icon)
 4. Import the ``Stobject.reg`` in this repo normally. This just sets up certain stuff for the sound icon to appear properly and sets SysTray and SysTrayInvoker
