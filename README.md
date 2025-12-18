@@ -1,9 +1,10 @@
-# StobjectEx
+## StobjectEx
 Windows XP Shell tray objects for modern windows
 <img width="800" height="600" alt="Windows 10 explorer" src="https://github.com/user-attachments/assets/774ccc68-a861-47a5-b0cb-78514c070896" />
+ 
 Intended for usage with [ExplorerEx](https://github.com/kfh83/ExplorerEx)
 
-# How to setup
+## How to setup
 1. Compile the project from source
 2. Rename the resulting binary to something like stobjectex.dll then copy it over to ``%SystemRoot%\System32``
 3. Take sndvol32.exe from Windows XP Professional x64 Edition and place it also in System32 (for sound tray icon)
@@ -13,7 +14,7 @@ Intended for usage with [ExplorerEx](https://github.com/kfh83/ExplorerEx)
 7. Restart ``explorer.exe`` through Task Manager
 8. profit
 
-# SndVol32 fix
+## SndVol32 fix
 The standard sndvol32.exe may not work as intended without this patch. Credits go to [comdlg32](https://github.com/comdlg32)
 1. Download the ``sndvol32.sdb`` and ``sndvol32-64.sdb`` files in this repo
 2. Place the files in ``%SystemRoot%\apppatch``
