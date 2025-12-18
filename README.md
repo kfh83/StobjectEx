@@ -1,7 +1,7 @@
 # StobjectEx
 Windows XP Shell tray objects for modern windows
-Intended for usage with [ExplorerEx](https://github.com/kfh83/ExplorerEx)
 <img width="800" height="600" alt="Windows 10 explorer" src="https://github.com/user-attachments/assets/774ccc68-a861-47a5-b0cb-78514c070896" />
+Intended for usage with [ExplorerEx](https://github.com/kfh83/ExplorerEx)
 
 # How to setup
 1. Compile the project from source
