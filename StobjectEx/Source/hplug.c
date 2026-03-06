@@ -165,6 +165,28 @@ IsHotPlugDevice(
 }
 
 BOOL
+NoConnectSound(
+    DEVINST DevInst
+)
+{
+    DEVPROPTYPE propType;
+    DEVPROP_BOOLEAN bNoConnectSound = 0;
+    ULONG bufferSize = sizeof(bNoConnectSound);
+
+    if (CM_Get_DevNode_Property(DevInst,
+        &DEVPKEY_Device_NoConnectSound,
+        &propType,
+        &bNoConnectSound,
+        &bufferSize, 0
+    ) != CR_SUCCESS)
+    {
+        return FALSE;
+    }
+
+    return bNoConnectSound == DEVPROP_TRUE;
+}
+
+BOOL
 IsRemovableDevice(
     IN  DEVINST     dnDevInst
     )
@@ -192,6 +214,10 @@ Return Value:
     // Validate parameters.
     //
     if (dnDevInst == 0) {
+        return FALSE;
+    }
+
+    if (NoConnectSound(dnDevInst)) {
         return FALSE;
     }
 
