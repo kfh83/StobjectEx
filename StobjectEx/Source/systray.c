@@ -98,10 +98,6 @@ void CloseIfOpen(LPHANDLE lph)
 }
 
 
-// From stobject.cpp
-void StartNetShell();
-void StopNetShell();
-
 // if lpCmdLine contains an integer value then we'll enable that service
 
 STDAPI_(int) SysTrayMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpszCmdLine, int nCmdShow)
@@ -172,9 +168,6 @@ STDAPI_(int) SysTrayMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lp
             SendMessage(hWnd, STWM_ENABLESERVICE, iEnableServ, TRUE);
 
 
-            // Whistler runs NETSHELL in the thread of the systray
-            StartNetShell();
-
             while (GetMessage(&Msg, NULL, 0, 0))
             {
                 if(g_pIsFaxMessage && g_pIsFaxMessage(&Msg))
@@ -189,8 +182,6 @@ STDAPI_(int) SysTrayMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lp
                     DispatchMessage(&Msg);
                 }
             }
-            // Whistler runs NETSHELL in the thread of the systray
-            StopNetShell();
         }
         CloseIfOpen(&g_hPCCARD);
     }
@@ -457,7 +448,6 @@ LRESULT CALLBACK SysTrayWndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM l
         HotPlug_WmDestroy(hWnd);
         Print_SHChangeNotify_Unregister();
         Print_TrayExit();
-        StopNetShell();
         if (g_hFaxLib)
         {
             if (g_pFaxMonitorShutdown)

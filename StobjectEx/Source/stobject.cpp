@@ -2,39 +2,6 @@
 #include "stobject.h"
 #include "systray.h"
 
-
-#include <initguid.h>
-// 7007ACCF-3202-11D1-AAD2-00805FC1270E     CLSID_ConnectionTray
-DEFINE_GUID(CLSID_ConnectionTray,                   0x7007ACCF,0x3202,0x11D1,0xAA,0xD2,0x00,0x80,0x5F,0xC1,0x27,0x0E);
-
-IOleCommandTarget *g_pctNetShell = NULL;
-
-extern "C"
-{
-void StartNetShell()
-{
-    //ASSERT(!g_pctNetShell);
-
-    HRESULT hr = CoCreateInstance(CLSID_ConnectionTray, NULL, CLSCTX_INPROC_SERVER,
-                            IID_IOleCommandTarget, (void **)&g_pctNetShell);
-
-    if (SUCCEEDED(hr))
-    {
-        g_pctNetShell->Exec(&CGID_ShellServiceObject, SSOCMDID_OPEN, 0, NULL, NULL);
-    }
-}
-
-void StopNetShell()
-{
-    if (g_pctNetShell)
-    {
-        g_pctNetShell->Exec(&CGID_ShellServiceObject, SSOCMDID_CLOSE, 0, NULL, NULL);
-        g_pctNetShell->Release();
-        g_pctNetShell = NULL;
-    }
-}
-} // extern C
-
 /************************************************************************************
 IUnknown Implementation
 
