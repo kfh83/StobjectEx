@@ -166,7 +166,6 @@ IDB_BATTS16             BITMAP    DISCARDABLE                  ".\BMP\batico16.b
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_HOTPLUG             ICON    DISCARDABLE     ".\ICO\HOTPLUG.ICO"
-IDI_VOLUME              ICON    DISCARDABLE     ".\ICO\VOLUME.ICO"
 IDI_MUTE                ICON    DISCARDABLE     ".\ICO\MUTE.ICO"
 IDI_BATTERYPLUG         ICON    DISCARDABLE     ".\ICO\battplug.ico"
 IDI_STK000              ICON    DISCARDABLE     ".\ICO\stk0000.ico"
