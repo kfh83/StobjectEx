@@ -149,21 +149,25 @@
     <ClCompile Include="Source\power.c" />
     <ClCompile Include="Source\print.cpp" />
     <ClCompile Include="Source\Shundoc\shundoc.c" />
+    <ClCompile Include="Source\ssomgr.cpp" />
     <ClCompile Include="Source\stobject.cpp" />
-    <ClCompile Include="Source\systray.c" />
+    <ClCompile Include="Source\systray.cpp" />
     <ClCompile Include="Source\usbui.c" />
-    <ClCompile Include="Source\volume.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\audiocontroller.h" />
+    <ClInclude Include="Source\Bringovers\containerpolicies.h" />
     <ClInclude Include="Source\Bringovers\cscuiext.h" />
+    <ClInclude Include="Source\Bringovers\dpa.h" />
     <ClInclude Include="Source\Bringovers\Help.h" />
+    <ClInclude Include="Source\Bringovers\memsafe.h" />
     <ClInclude Include="Source\Bringovers\SHFusion.h" />
     <ClInclude Include="Source\Bringovers\systrayp.h" />
     <ClInclude Include="Source\Bringovers\WinUserP.h" />
     <ClInclude Include="Source\cfact.h" />
     <ClInclude Include="Source\pccrdapi.h" />
     <ClInclude Include="Source\Shundoc\shundoc.h" />
+    <ClInclude Include="Source\ssomgr.h" />
     <ClInclude Include="Source\stclsid.h" />
     <ClInclude Include="Source\stdafx.h" />
     <ClInclude Include="Source\stobject.h" />

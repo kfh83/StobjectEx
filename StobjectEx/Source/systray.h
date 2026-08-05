@@ -1,3 +1,10 @@
+#ifndef _SYSTRAY_H_
+#define _SYSTRAY_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stresid.h"
 
 #ifndef ARRAYSIZE
@@ -59,16 +66,6 @@ VOID    PASCAL Power_UpdateStatus(HWND, DWORD, BOOL);
 
 void CloseIfOpen(LPHANDLE);
 
-BOOL Volume_Init(HWND hWnd);
-BOOL Volume_CheckEnable(HWND hWnd, BOOL bEnabled);
-void Volume_DeviceChange(HWND hWnd, WPARAM wParam, LPARAM lParam);
-void Volume_Notify(HWND hWnd, WPARAM wParam, LPARAM lParam);
-void Volume_Timer(HWND hWnd);
-void Volume_Shutdown(HWND hWnd);
-void Volume_AudioChange(HWND hWnd, WPARAM wParam, LPARAM lParam);
-void Volume_HandlePowerBroadcast(HWND hWnd, WPARAM wParam, LPARAM lParam);
-void Volume_WmDestroy(HWND hWnd);
-
 BOOL HotPlug_CheckEnable(HWND hWnd, BOOL bEnabled);
 void HotPlug_DeviceChange(HWND hWnd, WPARAM wParam, LPARAM lParam);
 void HotPlug_Notify(HWND hWnd, WPARAM wParam, LPARAM lParam);
@@ -115,3 +112,8 @@ SetIconFocus(
 
 STDAPI_(int) SysTrayMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpszCmdLine, int nCmdShow);
 
+#ifdef __cplusplus
+}
+#endif
+
+#endif // _SYSTRAY_H_

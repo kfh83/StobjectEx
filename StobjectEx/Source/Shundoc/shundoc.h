@@ -7,11 +7,14 @@
 //  File:       shundoc.h
 //
 //  History:    Jun-11-25   kfh83     Created
+//              Aug-05-26   allison   Added ResultFromWin32 helpers
 //
 //--------------------------------------------------------------------------
 
 #include <Windows.h>
 #include <wmistr.h>
+
+STDAPI_(BOOL) SHUndocInit(void);
 
 //
 //  Macros
@@ -168,6 +171,9 @@
 #define IDC_CHEMISTRY                   1114
 #define IDC_POWERSTATE                  1115
 
+#define LIPF_ENABLE     0x00000001  // create the object (vs release the object)
+#define LIPF_HOLDREF    0x00000002  // hold ref on object after creation (vs release immediately)
+
 //
 //  Enums
 //
@@ -227,7 +233,7 @@ HWND DestroyBatMeter(HWND hWnd);
 BOOL BatMeterCapabilities(PUINT* ppuiBatCount);
 BOOL UpdateBatMeter(HWND hWnd, BOOL bShowMulti, BOOL bForceUpdate, PBATTERY_STATE pbsComposite);
 HWND CreateBatMeter(HWND hwndParent, HWND hwndFrame, BOOL bShowMulti, PBATTERY_STATE pbsComposite);
-LPTSTR CDECL LoadDynamicString(UINT StringID, ...);
+EXTERN_C LPTSTR CDECL LoadDynamicString(UINT StringID, ...);
 
 //
 //  Load module stuff
@@ -237,5 +243,28 @@ extern BOOL(WINAPI* PowerCapabilities)();
 extern ULONG(WINAPI* WmiCloseBlock)(IN WMIHANDLE DataBlockHandle);
 extern ULONG(WINAPI* WmiOpenBlock)(IN GUID *Guid, IN ULONG DesiredAccess, OUT WMIHANDLE *DataBlockHandle);
 extern ULONG(WINAPI* WmiReceiveNotificationsW)(IN ULONG HandleCount, IN HANDLE *HandleList, IN NOTIFICATIONCALLBACK Callback, IN ULONG_PTR DeliveryContext);
+
+// ccstock.h
+
+//
+// A couple of inline functions that create an HRESULT from
+// a Win32 error code without the double-evaluation side effect of
+// the HRESULT_FROM_WIN32 macro.
+//
+// Use ResultFromWin32 in place of HRESULT_FROM_WIN32 if
+// the side effects of that macro are unwanted.
+// ResultFromLastError was created as a convenience for a
+// common idiom.
+// You could simply call ResultFromWin32(GetLastError()) yourself.
+//
+__inline HRESULT ResultFromWin32(DWORD dwErr)
+{
+    return HRESULT_FROM_WIN32(dwErr);
+}
+
+__inline HRESULT ResultFromLastError(void)
+{
+    return ResultFromWin32(GetLastError());
+}
 
 

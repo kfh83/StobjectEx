@@ -28,7 +28,7 @@ void FilterKeys_UpdateStatus(HWND hWnd, BOOL bShowIcon);
 void FilterKeys_UpdateIcon(HWND hWnd, DWORD message);
 void NormalizeIcon(HICON *phIcon);
 
-extern DWORD g_uiShellHook; //shell hook window message
+DWORD g_uiShellHook; //shell hook window message
 
 __inline void RegShellHook(HWND hWnd)
 {
